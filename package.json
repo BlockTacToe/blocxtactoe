@@ -15,7 +15,9 @@
     "deploy:base": "hardhat run scripts/deploy.ts --network base",
     "verify:base": "hardhat run scripts/verify.ts --network base",
     "deploy:mainnet": "hardhat run scripts/deploy.ts --network mainnet",
-    "verify:mainnet": "hardhat run scripts/verify.ts --network mainnet"
+    "verify:mainnet": "hardhat run scripts/verify.ts --network mainnet",
+    "loop:base": "hardhat run --network base x-loop/counter-driver.ts",
+    "loop:base:fast": "hardhat run --network base x-loop/counter-driver.ts --fast"
   },
   "keywords": [
     "blocxtactoe",

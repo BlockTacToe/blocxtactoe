@@ -39,3 +39,5 @@ coverage/
 # Misc
 *.tsbuildinfo
 
+# Local loops (do not commit)
+x-loop/
