@@ -63,8 +63,48 @@ export function handleGameFinished(event: GameFinished): void {
   if (game) {
     game.status = "FINISHED"
     game.finishedAt = event.block.timestamp
-    if (event.params.winner.toHex() != "0x0000000000000000000000000000000000000000") {
-      game.winner = event.params.winner.toHex()
+    
+    let winnerAddress = event.params.winner.toHex()
+    if (winnerAddress != "0x0000000000000000000000000000000000000000") {
+      game.winner = winnerAddress
+      
+      // Update winner stats
+      let winner = Player.load(winnerAddress)
+      if (winner) {
+        winner.wins = winner.wins.plus(BigInt.fromI32(1))
+        winner.totalGames = winner.totalGames.plus(BigInt.fromI32(1))
+        winner.save()
+      }
+      
+      // Update loser stats
+      let player1Id = game.player1
+      let player2Id = game.player2
+      let loserId = winnerAddress == player1Id ? player2Id : player1Id
+      if (loserId) {
+        let loser = Player.load(loserId)
+        if (loser) {
+          loser.losses = loser.losses.plus(BigInt.fromI32(1))
+          loser.totalGames = loser.totalGames.plus(BigInt.fromI32(1))
+          loser.save()
+        }
+      }
+    } else {
+      // Draw
+      let p1 = Player.load(game.player1)
+      if (p1) {
+        p1.draws = p1.draws.plus(BigInt.fromI32(1))
+        p1.totalGames = p1.totalGames.plus(BigInt.fromI32(1))
+        p1.save()
+      }
+      let p2Id = game.player2
+      if (p2Id) {
+        let p2 = Player.load(p2Id)
+        if (p2) {
+          p2.draws = p2.draws.plus(BigInt.fromI32(1))
+          p2.totalGames = p2.totalGames.plus(BigInt.fromI32(1))
+          p2.save()
+        }
+      }
     }
     game.save()
   }
