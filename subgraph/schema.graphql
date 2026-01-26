@@ -1,0 +1,43 @@
+type Player @entity {
+  id: ID!
+  username: String!
+  address: Bytes!
+  rating: BigInt!
+  totalGames: BigInt!
+  wins: BigInt!
+  losses: BigInt!
+  draws: BigInt!
+  games: [Game!]! @derivedFrom(field: "players")
+}
+
+type Game @entity {
+  id: ID!
+  gameId: BigInt!
+  player1: Player!
+  player2: Player
+  betAmount: BigInt!
+  boardSize: Int!
+  token: Bytes!
+  winner: Player
+  status: GameStatus!
+  createdAt: BigInt!
+  finishedAt: BigInt
+  moves: [Move!]! @derivedFrom(field: "game")
+  players: [Player!]!
+}
+
+type Move @entity {
+  id: ID!
+  game: Game!
+  player: Player!
+  row: Int!
+  col: Int!
+  symbol: Int!
+  timestamp: BigInt!
+}
+
+enum GameStatus {
+  CREATED
+  ACTIVE
+  FINISHED
+}
