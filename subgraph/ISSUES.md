@@ -89,16 +89,49 @@ Allow users to view past games and step through every move made.
   - [ ] Query all `Move` entities associated with that game ID.
   - [ ] Implement a playback UI to visualize the move sequence.
 
-### Issue #10: Indexing Reward Claims
+### Issue #10: Indexing Reward Claims & Financial Metrics
 **Status:** ❌ PENDING  
-**Labels:** `mappings`, `schema`  
-**Priority:** LOW
+**Labels:** `mappings`, `schema`, `finance`  
+**Priority:** MEDIUM
 **Description:**
-Index when players claim their rewards to track historical payouts.
+Index when players claim their rewards to track historical payouts and platform volume.
 - **Tasks:**
   - [ ] Add `RewardClaim` entity to schema.
-  - [ ] Add handler for `RewardClaimed` event in `subgraph.yaml`.
-  - [ ] Implement mapping logic in `src/mapping.ts`.
+  - [ ] Track `totalVolume` and `totalFeesCollected` in a new `Protocol` global entity.
+  - [ ] Index `RewardClaimed` events.
+
+### Issue #11: Protocol Governance & Settings Tracking
+**Status:** ❌ PENDING  
+**Labels:** `mappings`, `governance`  
+**Priority:** LOW
+**Description:**
+Track administrative changes and protocol parameter updates.
+- **Tasks:**
+  - [ ] Index `TimeoutUpdated`, `PlatformFeeUpdated`, and `KFactorUpdated` events.
+  - [ ] Create a `ProtocolSetting` entity to store history of parameter changes.
+  - [ ] Index `AdminAdded` and `AdminRemoved` for a transparent audit log.
+
+### Issue #12: Dynamic Token Support Indexing
+**Status:** ❌ PENDING  
+**Labels:** `mappings`, `feature`  
+**Priority:** MEDIUM
+**Description:**
+Index supported tokens to allow the frontend to dynamically list betting options.
+- **Tasks:**
+  - [ ] Add `Token` entity to schema.
+  - [ ] Index `TokenSupported` event to add/remove tokens from the active list.
+  - [ ] Fetch token metadata (name/symbol) in mappings.
+
+### Issue #13: Advanced Player Analytics (Sportsmanship & Forfeits)
+**Status:** ❌ PENDING  
+**Labels:** `schema`, `analytics`  
+**Priority:** LOW
+**Description:**
+Track how games end to calculate sportsmanship ratings.
+- **Tasks:**
+  - [ ] Update `Player` entity to include `forfeitCount`.
+  - [ ] Index `GameForfeited` event explicitly.
+  - [ ] Calculate "Time-to-Move" averages for players.
 
 ---
 

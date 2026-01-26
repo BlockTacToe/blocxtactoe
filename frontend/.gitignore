@@ -48,3 +48,4 @@ next-env.d.ts
 # smart contract
 /0-smart-contract
 
+.env*.local

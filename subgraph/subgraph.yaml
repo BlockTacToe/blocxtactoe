@@ -23,12 +23,16 @@ dataSources:
       eventHandlers:
         - event: PlayerRegistered(indexed address,string)
           handler: handlePlayerRegistered
-        - event: GameCreated(indexed uint256,indexed address,indexed address,uint256,uint8,address)
+        - event: GameCreated(indexed uint256,indexed address,uint256,uint8,address)
           handler: handleGameCreated
-        - event: MoveMade(indexed uint256,indexed address,uint8,uint8,uint8)
-          handler: handleMoveMade
-        - event: GameFinished(indexed uint256,indexed address,uint8,uint256)
-          handler: handleGameFinished
-        - event: ChallengeCreated(indexed uint256,indexed address,indexed address,uint256,uint8,address)
+        - event: GameJoined(indexed uint256,indexed address,uint8)
+          handler: handleGameJoined
+        - event: MovePlayed(indexed uint256,indexed address,uint8)
+          handler: handleMovePlayed
+        - event: GameWon(indexed uint256,indexed address,uint256)
+          handler: handleGameWon
+        - event: GameForfeited(indexed uint256,indexed address)
+          handler: handleGameForfeited
+        - event: ChallengeCreated(indexed uint256,indexed address,indexed address,uint256)
           handler: handleChallengeCreated
       file: ./src/mapping.ts
