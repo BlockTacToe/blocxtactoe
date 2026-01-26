@@ -6,8 +6,7 @@ import { useBlOcXTacToe } from '@/hooks/useBlOcXTacToe';
 import { usePlayerData } from '@/hooks/useGameData';
 import { GameBoard } from './games/GameBoard';
 import { GamesList } from './games/GamesList';
-import { useGamesList } from '@/hooks/useGamesList';
-import { useLeaderboard } from '@/hooks/useGameData';
+import { useSubgraphLeaderboard, useSubgraphActiveGames } from '@/hooks/useSubgraphData';
 import { Grid3x3, Trophy, Play, Plus, TrendingUp, Clock, Users } from 'lucide-react';
 import Link from 'next/link';
 import { formatEther } from 'viem';
@@ -16,8 +15,8 @@ export default function BlockTacToeDashboard() {
   const { address, isConnected } = useAccount();
   const { player } = useBlOcXTacToe();
   const { player: playerData } = usePlayerData(address);
-  const { games, loading: gamesLoading } = useGamesList();
-  const { leaderboard, isLoading: leaderboardLoading } = useLeaderboard(10);
+  const { games, isLoading: gamesLoading } = useSubgraphActiveGames();
+  const { leaderboard, isLoading: leaderboardLoading } = useSubgraphLeaderboard(10);
   const [activeTab, setActiveTab] = useState('games');
 
   // Sort leaderboard by rating (descending), then by wins (descending), then by address for consistency
@@ -57,17 +56,16 @@ export default function BlockTacToeDashboard() {
     );
   }
 
-  // Convert games map to array for GamesList
-  const gamesArray = Array.from(games.values()).map((game, index) => ({
-    id: index.toString(),
-    gameId: BigInt(index),
-    player1: game.playerOne,
-    player2: game.playerTwo && game.playerTwo !== "0x0000000000000000000000000000000000000000" ? game.playerTwo : null,
-    betAmount: game.betAmount,
-    status: game.status === 0 ? (game.playerTwo && game.playerTwo !== "0x0000000000000000000000000000000000000000" ? "active" : "waiting") : "finished" as "waiting" | "active" | "finished",
-    currentPlayer: game.isPlayerOneTurn ? game.playerOne : (game.playerTwo || null),
-    winner: game.winner && game.winner !== "0x0000000000000000000000000000000000000000" ? game.winner : null,
-    createdAt: new Date(),
+  const gamesArray = games.map((game) => ({
+    id: game.id,
+    gameId: BigInt(game.gameId),
+    player1: game.player1.id,
+    player2: null,
+    betAmount: BigInt(game.betAmount),
+    status: "waiting" as const,
+    currentPlayer: game.player1.id,
+    winner: null,
+    createdAt: new Date(Number(game.createdAt) * 1000),
   }));
 
   return (
@@ -173,17 +171,17 @@ export default function BlockTacToeDashboard() {
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
                 </div>
-              ) : !sortedLeaderboard || sortedLeaderboard.length === 0 ? (
+              ) : !leaderboard || leaderboard.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-400">No players on the leaderboard yet.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {sortedLeaderboard.map((player, index) => {
+                  {leaderboard.map((player, index) => {
                     const rank = index + 1;
                     return (
                       <div
-                        key={player.player}
+                        key={player.id}
                         className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all"
                       >
                         <div className="flex items-center gap-4">
@@ -195,15 +193,15 @@ export default function BlockTacToeDashboard() {
                           </div>
                           <div>
                             <p className="text-white font-medium">
-                              {player.username || `${player.player.slice(0, 6)}...${player.player.slice(-4)}`}
+                              {player.username || `${player.address.slice(0, 6)}...${player.address.slice(-4)}`}
                             </p>
                             <p className="text-gray-400 text-sm">
-                              {Number(player.wins)} Wins
+                              {player.wins} Wins
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-white font-bold text-lg">{Number(player.rating)}</span>
+                          <span className="text-white font-bold text-lg">{player.rating}</span>
                         </div>
                       </div>
                     );

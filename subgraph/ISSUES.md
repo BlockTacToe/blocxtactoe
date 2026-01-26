@@ -30,31 +30,21 @@ This file tracks the pending and completed tasks for the **BlOcXTacToe Subgraph*
 **Priority:** CRITICAL
 **Description:** Successfully compile mappings to WASM and deploy the subgraph to Subgraph Studio on the Base network.
 
+### Issue #5: Frontend Integration — useSubgraph Hook
+**Status:** ✅ COMPLETED  
+**Labels:** `frontend`, `integration`  
+**Priority:** HIGH
+**Description:** Created a custom React hook in the frontend to interact with the Subgraph GraphQL endpoint using native fetch.
+
+### Issue #6: Leaderboard — Subgraph Migration
+**Status:** ✅ COMPLETED  
+**Labels:** `frontend`, `feature`  
+**Priority:** HIGH
+**Description:** Migrated the leaderboard and dashboard previews to use high-performance subgraph queries instead of contract polling.
+
 ---
 
 ## ❌ Pending Issues
-
-### Issue #5: Frontend Integration — useSubgraph Hook
-**Status:** ❌ PENDING  
-**Labels:** `frontend`, `integration`  
-**Priority:** HIGH
-**Description:**
-Create a custom React hook in the frontend to interact with the Subgraph GraphQL endpoint.
-- **Tasks:**
-  - [ ] Implement `useSubgraph` hook using `apollo-client` or `urql`.
-  - [ ] Create a standard query utility for fetching data.
-  - [ ] Handle loading and error states for GraphQL queries.
-
-### Issue #6: Leaderboard — Subgraph Migration
-**Status:** ❌ PENDING  
-**Labels:** `frontend`, `feature`  
-**Priority:** HIGH
-**Description:**
-Replace the current contract-based leaderboard logic with a high-performance subgraph query.
-- **Tasks:**
-  - [ ] Write GraphQL query to fetch top 100 players ordered by `rating`.
-  - [ ] Update `Leaderboard.tsx` to use the subgraph data.
-  - [ ] Implement instant search/filter for players by username.
 
 ### Issue #7: Active Games & Challenges Dashboard
 **Status:** ❌ PENDING  
