@@ -1,26 +1,11 @@
 "use client";
 
 import { Trophy, Medal, Award } from "lucide-react";
-import { useLeaderboard } from "@/hooks/useGameData";
+import { useSubgraphLeaderboard } from "@/hooks/useSubgraphData";
 import { Loader2 } from "lucide-react";
 
 export function LeaderboardContent() {
-  const { leaderboard, isLoading, error } = useLeaderboard(100);
-
-  // Sort leaderboard by wins (descending), then by address for consistency
-  const sortedLeaderboard = leaderboard && Array.isArray(leaderboard) 
-    ? [...leaderboard].sort((a, b) => {
-        // Primary sort: by wins (descending)
-        const winsA = Number(a.wins || 0);
-        const winsB = Number(b.wins || 0);
-        if (winsB !== winsA) {
-          return winsB - winsA;
-        }
-        
-        // Secondary sort: by address for consistency
-        return a.player.localeCompare(b.player);
-      })
-    : [];
+  const { leaderboard, isLoading, error } = useSubgraphLeaderboard(100);
 
   if (isLoading) {
     return (
@@ -66,18 +51,18 @@ export function LeaderboardContent() {
         </div>
 
         <div className="bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10 p-3 sm:p-4 md:p-6 lg:p-8">
-          {!sortedLeaderboard || sortedLeaderboard.length === 0 ? (
+          {!leaderboard || leaderboard.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               <p className="text-gray-400 text-sm sm:text-base">No players on the leaderboard yet.</p>
               <p className="text-gray-500 text-xs sm:text-sm mt-2">Be the first to play and win!</p>
             </div>
           ) : (
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
-              {sortedLeaderboard.map((player, index) => {
+              {leaderboard.map((player, index) => {
                 const rank = index + 1;
                 return (
                   <div
-                    key={player.player}
+                    key={player.id}
                     className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all"
                   >
                     <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-1 min-w-0">
@@ -89,17 +74,28 @@ export function LeaderboardContent() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-white font-medium text-sm sm:text-base truncate">
-                          {player.username || `${player.player.slice(0, 6)}...${player.player.slice(-4)}`}
+                          {player.username || `${player.address.slice(0, 6)}...${player.address.slice(-4)}`}
                         </p>
                         <p className="text-gray-400 text-xs sm:text-sm font-mono truncate">
-                          {player.player.slice(0, 10)}...{player.player.slice(-8)}
+                          {player.address.slice(0, 10)}...{player.address.slice(-8)}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                      <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
-                      <span className="text-white font-bold text-sm sm:text-base md:text-lg">{Number(player.wins)}</span>
-                      <span className="text-gray-400 text-xs sm:text-sm">wins</span>
+                    <div className="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+                      <div className="flex flex-col items-end">
+                        <div className="flex items-center gap-1">
+                          <Award className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
+                          <span className="text-white font-bold text-sm sm:text-base">{player.rating}</span>
+                        </div>
+                        <span className="text-gray-500 text-[10px] sm:text-xs uppercase tracking-wider font-bold">Rating</span>
+                      </div>
+                      <div className="flex flex-col items-end min-w-[60px]">
+                        <div className="flex items-center gap-1">
+                          <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" />
+                          <span className="text-white font-bold text-sm sm:text-base">{player.wins}</span>
+                        </div>
+                        <span className="text-gray-500 text-[10px] sm:text-xs uppercase tracking-wider font-bold">Wins</span>
+                      </div>
                     </div>
                   </div>
                 );
