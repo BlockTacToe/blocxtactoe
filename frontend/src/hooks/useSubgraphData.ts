@@ -87,16 +87,16 @@ export function useSubgraphActiveGames() {
   return { games: data, isLoading: loading, error };
 }
 
-export function useSubgraphPlayerGames(playerAddress: string) {
+export function useSubgraphPendingChallenges(playerAddress: string) {
   const { query, loading, error } = useSubgraph();
   const [data, setData] = useState<SubgraphGame[]>([]);
 
   useEffect(() => {
     if (!playerAddress) return;
-    const fetchPlayerGames = async () => {
+    const fetchChallenges = async () => {
       const queryString = `
-        query GetPlayerGames($player: String!) {
-          games(where: { players_contains: [$player] }, orderBy: createdAt, orderDirection: desc) {
+        query GetPendingChallenges($player: String!) {
+          games(where: { player2: $player, status: CREATED }, orderBy: createdAt, orderDirection: desc) {
             id
             gameId
             player1 { id username }
@@ -106,8 +106,19 @@ export function useSubgraphPlayerGames(playerAddress: string) {
             token
             status
             createdAt
-            winner { id username }
           }
+        }
+      `;
+      const result = await query<{ games: SubgraphGame[] }>(queryString, { player: playerAddress.toLowerCase() });
+      if (result) setData(result.games);
+    };
+
+    fetchChallenges();
+  }, [query, playerAddress]);
+
+  return { challenges: data, isLoading: loading, error };
+}
+
         }
       `;
       const result = await query<{ games: SubgraphGame[] }>(queryString, { player: playerAddress.toLowerCase() });
