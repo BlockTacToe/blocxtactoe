@@ -47,15 +47,15 @@ This file tracks the pending and completed tasks for the **BlOcXTacToe Subgraph*
 ## ❌ Pending Issues
 
 ### Issue #7: Active Games & Challenges Dashboard
-**Status:** ❌ PENDING  
+**Status:** ✅ COMPLETED  
 **Labels:** `frontend`, `feature`  
 **Priority:** MEDIUM
 **Description:**
 Use the subgraph to show a live feed of joinable games and pending challenges.
 - **Tasks:**
-  - [ ] Query for games with status `CREATED`.
-  - [ ] Query for challenges where the current user is the `challenged` player.
-  - [ ] Display real-time count of active games on the landing page.
+  - [x] Query for games with status `CREATED`.
+  - [x] Query for challenges where the current user is the `challenged` player.
+  - [x] Display real-time count of active games on the landing page.
 
 ### Issue #8: Enhanced Player Profiles
 **Status:** ❌ PENDING  
