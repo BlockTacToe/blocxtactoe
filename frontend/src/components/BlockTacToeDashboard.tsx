@@ -5,17 +5,12 @@ import { useAccount } from 'wagmi';
 import { useBlOcXTacToe } from '@/hooks/useBlOcXTacToe';
 import { usePlayerData } from '@/hooks/useGameData';
 import { GameBoard } from './games/GameBoard';
-import { GamesList } from './games/GamesList';
-import { useSubgraphLeaderboard, useSubgraphActiveGames } from '@/hooks/useSubgraphData';
-import { Grid3x3, Trophy, Play, Plus, TrendingUp, Clock, Users } from 'lucide-react';
-import Link from 'next/link';
-import { formatEther } from 'viem';
+import { ActiveGamesList } from './dashboard/ActiveGamesList';
 
 export default function BlockTacToeDashboard() {
   const { address, isConnected } = useAccount();
   const { player } = useBlOcXTacToe();
   const { player: playerData } = usePlayerData(address);
-  const { games, isLoading: gamesLoading } = useSubgraphActiveGames();
   const { leaderboard, isLoading: leaderboardLoading } = useSubgraphLeaderboard(10);
   const [activeTab, setActiveTab] = useState('games');
 
@@ -145,18 +140,11 @@ export default function BlockTacToeDashboard() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">All Games</h2>
-                <p className="text-gray-400">Join existing games or create a new one</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Active Games & Challenges</h2>
+                <p className="text-gray-400">Join a game or create your own challenge</p>
               </div>
-              <Link
-                href="/create"
-                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-medium transition-all border border-white/20"
-              >
-                <Plus className="w-4 h-4" />
-                Create Game
-              </Link>
             </div>
-            <GamesList games={gamesArray} loading={gamesLoading} />
+            <ActiveGamesList />
           </div>
         )}
 
