@@ -118,15 +118,3 @@ export function useSubgraphPendingChallenges(playerAddress: string) {
 
   return { challenges: data, isLoading: loading, error };
 }
-
-        }
-      `;
-      const result = await query<{ games: SubgraphGame[] }>(queryString, { player: playerAddress.toLowerCase() });
-      if (result) setData(result.games);
-    };
-
-    fetchPlayerGames();
-  }, [query, playerAddress]);
-
-  return { games: data, isLoading: loading, error };
-}
