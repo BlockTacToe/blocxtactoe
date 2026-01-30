@@ -10,9 +10,11 @@
     "remove-local": "graph remove --node http://localhost:8020/ thebabalola/blocxtactoe-subgraph",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 thebabalola/blocxtactoe-subgraph"
   },
-
   "dependencies": {
     "@graphprotocol/graph-cli": "0.98.1",
     "@graphprotocol/graph-ts": "0.36.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "^0.6.0"
   }
 }
