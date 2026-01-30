@@ -17,6 +17,8 @@ dataSources:
         - Player
         - Game
         - Move
+        - RewardClaim
+        - Protocol
       abis:
         - name: BlOcXTacToe
           file: ./abis/BlOcXTacToe.json
@@ -35,4 +37,6 @@ dataSources:
           handler: handleGameForfeited
         - event: ChallengeCreated(indexed uint256,indexed address,indexed address,uint256)
           handler: handleChallengeCreated
+        - event: RewardClaimed(indexed uint256,indexed address,uint256)
+          handler: handleRewardClaimed
       file: ./src/mapping.ts

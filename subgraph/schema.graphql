@@ -41,3 +41,20 @@ enum GameStatus {
   ACTIVE
   FINISHED
 }
+
+# Records when a reward is claimed for a finished game
+type RewardClaim @entity(immutable: true) {
+  id: ID!
+  game: Game!
+  winner: Player!
+  amount: BigInt!
+  timestamp: BigInt!
+}
+
+# Global protocol metrics
+type Protocol @entity(immutable: false) {
+  id: ID!
+  totalVolume: BigInt!
+  totalRewardsClaimed: BigInt!
+  totalFeesCollected: BigInt!
+}
