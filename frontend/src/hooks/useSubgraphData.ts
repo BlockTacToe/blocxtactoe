@@ -118,3 +118,67 @@ export function useSubgraphPendingChallenges(playerAddress: string) {
 
   return { challenges: data, isLoading: loading, error };
 }
+
+// Fetch a single game by ID
+export function useSubgraphGame(gameId?: string) {
+  const { query, loading, error } = useSubgraph();
+  const [data, setData] = useState<SubgraphGame | null>(null);
+
+  useEffect(() => {
+    if (!gameId) return;
+    const fetchGame = async () => {
+      const q = `
+        query GetGame($id: ID!) {
+          game(id: $id) {
+            id
+            gameId
+            player1 { id username }
+            player2 { id username }
+            betAmount
+            boardSize
+            token
+            status
+            createdAt
+            winner { id username }
+          }
+        }
+      `;
+      const res = await query<{ game: SubgraphGame | null }>(q, { id: gameId });
+      if (res) setData(res.game || null);
+    };
+    fetchGame();
+  }, [query, gameId]);
+
+  return { game: data, isLoading: loading, error };
+}
+
+// Fetch moves for a game
+export function useSubgraphMoves(gameId?: string) {
+  const { query, loading, error } = useSubgraph();
+  const [data, setData] = useState<SubgraphMove[]>([]);
+
+  useEffect(() => {
+    if (!gameId) return;
+    const fetchMoves = async () => {
+      const q = `
+        query GetMoves($gameId: ID!) {
+          moves(where: { game: $gameId }, orderBy: timestamp, orderDirection: asc) {
+            id
+            game { id }
+            player { id username }
+            row
+            col
+            symbol
+            timestamp
+          }
+        }
+      `;
+      const res = await query<{ moves: SubgraphMove[] }>(q, { gameId });
+      if (res) setData(res.moves || []);
+    };
+
+    fetchMoves();
+  }, [query, gameId]);
+
+  return { moves: data, isLoading: loading, error };
+}
