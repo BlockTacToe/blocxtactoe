@@ -1,2 +1,13 @@
-.vercel
+/.vercel/
+.vscode/
+/frontend/.next/
+/frontend/node_modules/
+/frontend/.env.local
+/subgraph/node_modules/
+/subgraph/build/
+/subgraph/generated/
+/subgraph/tests/.bin/
+/subgraph/tests/.latest.json
+*.log
+.DS_Store
 .env*.local

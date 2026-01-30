@@ -3,3 +3,10 @@ build/
 generated/
 .DS_Store
 .env
+
+# Matchstick test artifacts
+tests/.bin/
+tests/.latest.json
+
+# Ignore matchstick wasm binaries
+tests/*.wasm
