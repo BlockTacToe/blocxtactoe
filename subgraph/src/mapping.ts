@@ -6,10 +6,43 @@ import {
   MovePlayed,
   GameWon,
   GameForfeited,
-  ChallengeCreated
+  ChallengeCreated,
+  RewardClaimed
 } from "../generated/BlOcXTacToe/BlOcXTacToe"
-import { Player, Game, Move } from "../generated/schema"
+import { Player, Game, Move, RewardClaim, Protocol } from "../generated/schema"
 
+export function handleRewardClaimed(event: RewardClaimed): void {
+  // Create a unique reward claim id
+  let id = event.params.gameId.toString() + "-" + event.block.number.toString() + "-" + event.logIndex.toString()
+  let rc = new RewardClaim(id)
+  rc.game = event.params.gameId.toString()
+  rc.winner = event.params.winner.toHex()
+  rc.amount = event.params.amount
+  rc.timestamp = event.block.timestamp
+  rc.save()
+
+  // Update protocol-wide metrics (singleton)
+  let protoId = "singleton"
+  let proto = Protocol.load(protoId)
+  if (!proto) {
+    proto = new Protocol(protoId)
+    proto.totalVolume = event.params.amount
+    proto.totalRewardsClaimed = BigInt.fromI32(1)
+    proto.totalFeesCollected = BigInt.fromI32(0)
+  } else {
+    proto.totalVolume = proto.totalVolume.plus(event.params.amount)
+    proto.totalRewardsClaimed = proto.totalRewardsClaimed.plus(BigInt.fromI32(1))
+  }
+  proto.save()
+
+  // Optionally update game finishedAt if not set
+  let game = Game.load(event.params.gameId.toString())
+  if (game && !game.finishedAt) {
+    game.finishedAt = event.block.timestamp
+    game.status = "FINISHED"
+    game.save()
+  }
+}
 export function handlePlayerRegistered(event: PlayerRegistered): void {
   let player = Player.load(event.params.player.toHex())
   if (!player) {
