@@ -83,11 +83,11 @@ export default function BlockTacToeDashboard() {
         {isRegistered && playerData && typeof playerData === "object" && "username" in playerData && (
           <div className="flex justify-center items-center gap-2 text-sm text-gray-400">
             <Users className="w-4 h-4" />
-            <span>@{playerData.username}</span>
-            {typeof playerData.wins === "bigint" && (
+            <span>@{playerData.username as string}</span>
+            {playerData.wins !== undefined && (
               <span className="text-orange-500">• {Number(playerData.wins)} Wins</span>
             )}
-            {typeof playerData.rating === "bigint" && (
+            {playerData.rating !== undefined && (
               <span className="text-blue-500">• Rating: {Number(playerData.rating)}</span>
             )}
           </div>
