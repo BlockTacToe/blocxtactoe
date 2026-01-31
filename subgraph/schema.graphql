@@ -7,6 +7,9 @@ type Player @entity(immutable: false) {
   wins: BigInt!
   losses: BigInt!
   draws: BigInt!
+  totalVolume: BigInt!
+  netEarnings: BigInt!
+  biggestWin: BigInt!
   games: [Game!]! @derivedFrom(field: "players")
 }
 
