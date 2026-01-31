@@ -58,15 +58,18 @@ Use the subgraph to show a live feed of joinable games and pending challenges.
   - [x] Display real-time count of active games on the landing page.
 
 ### Issue #8: Enhanced Player Profiles
-**Status:** ❌ PENDING  
-**Labels:** `schema`, `mappings`  
+**Status:** ✅ COMPLETED  
+**Labels:** `schema`, `mappings`, `frontend`  
 **Priority:** MEDIUM
 **Description:**
-Expand the subgraph to track more granular player data.
+Expand the subgraph to track more granular player data and display it in a profile UI.
 - **Tasks:**
-  - [ ] Track total volume bet by each player (in ETH/USDC).
-  - [ ] Record "Biggest Win" for each player.
-  - [ ] Update mappings to calculate these values on `GameWon` and `GameFinished`.
+  - [x] Track total volume bet by each player.
+  - [x] Record "Biggest Win".
+  - [x] Update mappings for `GameWon` and `GameFinished`.
+  - [x] Create `ProfileTab` component in frontend.
+
+### Issue #9: Game Replay History
 
 ### Issue #9: Game Replay History
 **Status:** ❌ PENDING  
