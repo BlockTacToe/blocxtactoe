@@ -34,7 +34,8 @@ export const config = createConfig({
   transports: {
     [base.id]: http("https://mainnet.base.org", {
       batch: {
-        multicall: true,
+        batchSize: 1024,
+        wait: 10
       },
       retryCount: 3,
       retryDelay: 1000,
@@ -42,11 +43,10 @@ export const config = createConfig({
   },
   connectors: [
     // Farcaster Mini App connector as the primary option
-    farcasterMiniApp(),
+    // farcasterMiniApp(), // Temporarily disabled to debug initialization
     injected({
       target: "metaMask",
     }),
-    // metaMask(), // disabled: MetaMask connector pulls @react-native-async-storage which breaks the build
     coinbaseWallet({
       appName: "BlOcXTacToe",
     }),
