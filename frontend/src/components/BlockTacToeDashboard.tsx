@@ -7,11 +7,14 @@ import { usePlayerData } from '@/hooks/useGameData';
 import { GameBoard } from './games/GameBoard';
 import { ActiveGamesList } from './dashboard/ActiveGamesList';
 import { ProfileTab } from './profile/ProfileTab';
+import { useSubgraphLeaderboard, useSubgraphActiveGames } from '@/hooks/useSubgraphData';
+import { Grid3x3, Trophy, TrendingUp, Users } from 'lucide-react';
 
 export default function BlockTacToeDashboard() {
   const { address, isConnected } = useAccount();
   const { player } = useBlOcXTacToe();
   const { player: playerData } = usePlayerData(address);
+  const { games, isLoading: gamesLoading } = useSubgraphActiveGames();
   const { leaderboard, isLoading: leaderboardLoading } = useSubgraphLeaderboard(10);
   const [activeTab, setActiveTab] = useState('games');
 
@@ -33,7 +36,7 @@ export default function BlockTacToeDashboard() {
         }
         
         // Tertiary sort: by address for consistency
-        return a.player.localeCompare(b.player);
+        return a.address.localeCompare(b.address);
       })
     : [];
 
