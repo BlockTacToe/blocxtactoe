@@ -60,6 +60,9 @@ export function handlePlayerRegistered(event: PlayerRegistered): void {
     player.wins = BigInt.fromI32(0);
     player.losses = BigInt.fromI32(0);
     player.draws = BigInt.fromI32(0);
+    player.totalVolume = BigInt.fromI32(0);
+    player.netEarnings = BigInt.fromI32(0);
+    player.biggestWin = BigInt.fromI32(0);
   }
   player.username = event.params.username;
   player.save();
@@ -122,20 +125,37 @@ export function handleGameWon(event: GameWon): void {
     if (winner) {
       winner.wins = winner.wins.plus(BigInt.fromI32(1));
       winner.totalGames = winner.totalGames.plus(BigInt.fromI32(1));
+      
+      // Financials
+      let winnings = game.betAmount; // Winner gets pot (minus fees logic handled elsewhere if complex)
+      winner.totalVolume = winner.totalVolume.plus(game.betAmount); // Tracks volume played
+      winner.netEarnings = winner.netEarnings.plus(winnings);
+      
+      if (winnings.gt(winner.biggestWin)) {
+        winner.biggestWin = winnings;
+      }
+      
       winner.save();
     }
-
+    
     let player1Id = game.player1;
     let player2Id = game.player2;
     if (player2Id) {
-      let loserId = winnerAddress == player1Id ? player2Id : player1Id;
-      let loser = Player.load(loserId);
-      if (loser) {
-        loser.losses = loser.losses.plus(BigInt.fromI32(1));
-        loser.totalGames = loser.totalGames.plus(BigInt.fromI32(1));
-        loser.save();
-      }
+       let loserId = winnerAddress == player1Id ? player2Id : player1Id;
+       let loser = Player.load(loserId);
+       if (loser) {
+         loser.losses = loser.losses.plus(BigInt.fromI32(1));
+         loser.totalGames = loser.totalGames.plus(BigInt.fromI32(1));
+         
+         // Loser volume increases (they bet this amount)
+         loser.totalVolume = loser.totalVolume.plus(game.betAmount);
+         // Loser earnings decrease (they lost their bet)
+         loser.netEarnings = loser.netEarnings.minus(game.betAmount);
+         
+         loser.save();
+       }
     }
+
     game.save();
   }
 }
