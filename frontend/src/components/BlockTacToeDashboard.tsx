@@ -6,6 +6,7 @@ import { useBlOcXTacToe } from '@/hooks/useBlOcXTacToe';
 import { usePlayerData } from '@/hooks/useGameData';
 import { GameBoard } from './games/GameBoard';
 import { ActiveGamesList } from './dashboard/ActiveGamesList';
+import { ProfileTab } from './profile/ProfileTab';
 
 export default function BlockTacToeDashboard() {
   const { address, isConnected } = useAccount();
@@ -109,6 +110,11 @@ export default function BlockTacToeDashboard() {
               label: 'Activity', 
               icon: TrendingUp 
             },
+            {
+              id: 'profile',
+              label: 'Profile',
+              icon: Users
+            },
           ].map((tab) => {
             const IconComponent = tab.icon;
             return (
@@ -211,6 +217,12 @@ export default function BlockTacToeDashboard() {
                 <p className="text-gray-400">Activity feed coming soon. Check the Games tab for active games!</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="max-w-4xl mx-auto">
+            <ProfileTab />
           </div>
         )}
       </div>
